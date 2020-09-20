@@ -22,16 +22,14 @@ public class Project {
 	public static int grecords = 0; // how many good entries
 	public static void main(String[] args) throws SecurityException, IOException {
 		String File = "/Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv"; // where the document is saved on my computer 
-		//"/Users/kjpepper275/Documents/book1.csv"
-		//"/Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv"
-		connect(); // connecting to database
-		create(); // creating a table if needed
+		connect(); // connecting to database for the first time on the run
+		create(); // creating a table and drop a previous table
 		Project.read(File); // method to read the CSV File 
-		boolean append = true;
+		boolean append = true; // creating logged file for end results
 		FileHandler handler = new FileHandler("results.log", append);
         Logger logger = Logger.getLogger("Results From CSV");
         logger.addHandler(handler);
-        logger.info("INFORMATION!!!");
+        logger.info("INFORMATION!!!"); // header for file
         logger.info("Number of Records = " + records);
         logger.info("Number of Bad Records = " + brecords);
         logger.info("Number of Good Records = " + grecords);
@@ -42,8 +40,8 @@ public class Project {
 	      
 	      try {
 	         Class.forName("org.sqlite.JDBC");
-	         c = DriverManager.getConnection("jdbc:sqlite:information.db");
-	      } catch ( Exception e ) {
+	         c = DriverManager.getConnection("jdbc:sqlite:information.db"); //getting connection to database
+	      } catch ( Exception e ) { // any problems catch
 	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	         System.exit(0);
 	      }
@@ -52,24 +50,14 @@ public class Project {
 	public static void create() {
 	      Connection c = null;
 	      Statement stmt = null;
-	    /*  try {
-		         Class.forName("org.sqlite.JDBC");
-		         c = DriverManager.getConnection("jdbc:sqlite:information.db");
-		         System.out.println("Opened database successfully");
-		         String sql1 = "DROP TABLE GOODRESULTS ";
-		         stmt.executeUpdate(sql1);
-	      }catch ( Exception e ) {
-		         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-		         System.exit(0);
-		      } */
 	      try {
 	         Class.forName("org.sqlite.JDBC");
-	         c = DriverManager.getConnection("jdbc:sqlite:information.db");
-	         System.out.println("Opened database successfully");
-	         stmt = c.createStatement();
-	         String sqlCommand = "DROP TABLE IF EXISTS 'GOODRESULTS' ";
-	         stmt.executeUpdate(sqlCommand);
-	         String sql = "CREATE TABLE IF NOT EXISTS GOODRESULTS " +
+	         c = DriverManager.getConnection("jdbc:sqlite:information.db"); //connection to database
+	         System.out.println("Opened database successfully"); //confirmation on opening
+	         stmt = c.createStatement(); 
+	         String sqlCommand = "DROP TABLE IF EXISTS 'GOODRESULTS' "; // drop for multiple runs avoid duplicates
+	         stmt.executeUpdate(sqlCommand); //execute the string
+	         String sql = "CREATE TABLE IF NOT EXISTS GOODRESULTS " + //creating table and columns
 	                        "(FIRST TEXT     NOT NULL," +
 	                        " LAST           TEXT    NOT NULL, " + 
 	                        " EMAIL          TEXT     NOT NULL, " + 
@@ -84,13 +72,13 @@ public class Project {
 	         stmt.close();
 	         c.close();
 	      } catch ( Exception e ) {
-	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+	         System.err.println( e.getClass().getName() + ": " + e.getMessage() ); //catch
 	         System.exit(0);
 	      }
-	      System.out.println("Table created successfully");
+	      System.out.println("Table created successfully"); // confirmation
 	   }
 	
-	public static void add(String [] array) // insert into table
+	public static void add(String [] array) // insert into table for good results
 	{
 		Connection c = null;
 	    Statement stmt = null;
@@ -99,12 +87,12 @@ public class Project {
 	         c = DriverManager.getConnection("jdbc:sqlite:information.db");
 	         c.setAutoCommit(false);
 	         stmt = c.createStatement();
-	         //System.out.println(array[0]);
-	         //System.out.println(array[9]);
+	         //HardCodded the array as I was having trouble and wanted to see what each element equaled and why it would give an error
+	         //This only works for the test assisgnment although the logic is still the same I would Just have to research to make this cleaner
 	         String sql = "INSERT INTO GOODRESULTS (FIRST,LAST,EMAIL,GENDER,IMAGE,"
 	         		+ "PAYMENT,AMOUNT,BOOLEAN1, BOOLEAN2,LOCATION) " +
 	         		"VALUES('"+array[0]+"','"+array[1]+"','"+array[2]+"','"+array[3]+"','"+array[4]+"','"+array[5]+"','"+array[6]+"','"+array[7]+"','"+array[8]+"','"+array[9]+"')";
-	         stmt.executeUpdate(sql);
+	         stmt.executeUpdate(sql); // added add the colums for this row
 	         c.commit();
 	         c.close();
 	    }
@@ -115,15 +103,15 @@ public class Project {
 	    }
 	}
 
-	public static void read(String csvfile) {
+	public static void read(String csvfile) { // reading all the data from the csv
 		CSVReader reader = null;
 		System.out.println("Here");
 		try 
 		{
-			FileWriter outputfile = new FileWriter("results-bad.csv"); 
+			FileWriter outputfile = new FileWriter("results-bad.csv"); //my csv file I write too 
 			CSVWriter writer = new CSVWriter(outputfile); 
 			reader = new CSVReader(new FileReader(csvfile));
-			boolean bad = false;
+			boolean bad = false; // how to determine if its a bad entry
 			String[] line;
 			List<String[]> bdata = new ArrayList<String[]>(); // bad results
 			//List<String[]> gdata = new ArrayList<String[]>(); // good results
@@ -132,31 +120,30 @@ public class Project {
 				for(int i = 0; i < 10; i++)  
 				{  
 					String token = line[i];
-					if(token.equals("")||token.contains("'")) {
+					if(token.equals("")||token.contains("'")) { //checking if a row is empty also I check for a single quote as My Insert to table algorithm won't work if there is a single quote, This could be fixed but It took me a bit to get that insert to work
 						brecords++;
 						bad = true;
 					}
 				} 
 				if(bad) 
 				{
-					bdata.add(line);
+					bdata.add(line); // if its a bad result add to a list
 					bad = false;
 				}
 				else 
 				{
-					if(grecords==0) 
+					if(grecords==0) //ignore first success as it is just headers
 					{
-						grecords++;
+						grecords++; //increment to go to the next line
 					}
 					else {
 					grecords++;
-					//gdata.add(line);
-					add(line);
+					add(line); // send the string array to be added to the database
 					}
 				}
-				records++;
+				records++; // number of total records
 			}
-			writer.writeAll(bdata);
+			writer.writeAll(bdata);//write all the bad CSV entries at once 
 			writer.close(); 
 		}
 
