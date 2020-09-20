@@ -16,3 +16,4 @@ I drop the previosly created table each time it is ran just so I dont make the t
 
 
 
+I also Included my compressed java project folder Which includes the database it made and the CSV file that it outputs 
