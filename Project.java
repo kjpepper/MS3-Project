@@ -1,4 +1,4 @@
-package csvParse;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +16,21 @@ import java.sql.DatabaseMetaData;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+
 public class Project {
 	public static int records = 0; // how many entries in the CSV File
 	public static int brecords = 0; // how many bad entries
 	public static int grecords = 0; // how many good entries
 	public static void main(String[] args) throws SecurityException, IOException {
-		String File = "/Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv"; // where the document is saved on my computer 
+		Scanner sc = new Scanner(System.in); 
+		System.out.println("Please enter the File Path of your Interview Challenge CSV Document"); // Collect File Path
+		System.out.println("EXAMPLE: /Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv");
+		String Filepath = sc.nextLine(); // collect whole ine of user input if wrong will not run 
+		System.out.println(Filepath);
+		//String Filepath = "/Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv"; // where the document is saved on my computer 
 		connect(); // connecting to database for the first time on the run
 		create(); // creating a table and drop a previous table
-		Project.read(File); // method to read the CSV File 
+		Project.read(Filepath); // method to read the CSV File 
 		boolean append = true; // creating logged file for end results
 		FileHandler handler = new FileHandler("results.log", append);
         Logger logger = Logger.getLogger("Results From CSV");
@@ -105,7 +111,7 @@ public class Project {
 
 	public static void read(String csvfile) { // reading all the data from the csv
 		CSVReader reader = null;
-		System.out.println("Here");
+		//System.out.println("Here");
 		try 
 		{
 			FileWriter outputfile = new FileWriter("results-bad.csv"); //my csv file I write too 
