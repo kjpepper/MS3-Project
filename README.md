@@ -8,7 +8,7 @@ To get the script to run, download and make sure you have a valid file path for 
 
 Overview
 
-I began by creating a method to read the CSV document.  Due to the sample document being large, I decided to make my own testing CSV first. Then started to use OPENCSV, an external library used as a CSV parser. I used that to read the document and then I use CSVWriter to create my CSV document which I store the bad entries on. Once I got that working I switched to the CSV document that was provided. I only had one issue and that’s that my method kept thinking the document had 15 columns (there was only 10) so I hard coded in a line so that it stops at 10 (so this might not work for other CSV document inputs). 
+I began by creating a method to read the CSV document.  Due to the sample document being large, I decided to make my own testing CSV first. Then started to use OPENCSV, an external library used as a CSV parser. I utilized OPENCSV to read the document, and implemented CSVWriter to create my CSV document and store bad entries. Once I got that working I switched to the CSV document that was provided. I only had one issue and that’s that my method kept thinking the document had 15 columns (there was only 10) so I hard coded in a line so that it stops at 10 (so this might not work for other CSV document inputs). 
 
 The way my method detects if there is a valid entry or not, is it checks for a white space (“”). Although later on I ended up adding a statement to also check for a single quote (‘) as my insert database method would throw an error, so I added that as bad data. The bad data gets flagged and inputted into a list of arrays and my program writes the array list to a CSV at the end of the method.
 
