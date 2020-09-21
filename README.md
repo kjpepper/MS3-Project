@@ -1,19 +1,15 @@
 # MS3-Project
 //Kristopher Pepper
 
-Summary::
+Summary:
 
-With the Java Project that I have made, It will collect a CSV document as user input, it will read that document, Input all Valid Entries into a Database and all the other bad entries into another CSV file, it then counts all the records
-
-
-To get this to run just download and make sure you have a valid file path for the CSV File that you have/ You will also need to use the external libraries of OPENCSV-3.8.jar and also sqljdbc.jar
+The Java Project collects a CSV document as user input, then reads the document, inputs all valid entries into a database while taking bad entries into a separate CSV file, and counts all the records.
+To get the script to run, download and make sure you have a valid file path for the CSV File that you have. You will also need to use the external libraries of OPENCSV-3.8.jar and also sqljdbc.jar.
 
 Overview
 
-When Doing this Project The first thing I did was start reading out of the CSV file, I created a smaller testing CSV Doc to start an algorithm where I orignally read(using the external library of OPENCSV) and decide if the line in the CSV file is a valid entry or not, Once I had read through, I then start switched to the CSV was provided, I had to change some things around in my method as, I check if the cell is a white space but when using the CSV provided it would read 15 colums (its only the first 10 with data), So I put in a hard coded line to make it only check 10 columns(So this isn't going to work with other CSV files) I then Just started With the Database
+I started off by getting my method for reading the CSV Document working. The sample document given to me is quite large with 10 columns so I made my own testing CSV first and started to use OPENCSV which is an external library used as a CSV parser, I used that to read the document and then I use CSVWriter to create my CSV document which I store the bad entries on. Once I got that working I switched to the CSV document that was provided, I only had one issue and that’s that my method kept thinking the document had 15 columns (there was only 10) so I hard coded in a line so that it stops at 10 (so this might not work for other CSV document inputs). 
 
-I drop the previosly created table each time it is ran just so I dont make the table excessively large, also, My line of Code to input a line of of information into the Table is hard codded in with A string[], I could've made it more clean but I kept getting errors with the insert statement so when I finally got it to work I didn't want to keep working on it at the risk of breaking it again, so once again my Code will only work with theCSV file Provided
+The way my method detects if there is a valid entry or not, is it just checks for a white space (“”) although later on I ended up adding a statement to also check for a single quote (‘) as my insert database method would throw an error, so I just added that as bad data. The bad data gets flagged and inputted into a list of arrays and my program writes the array list to a csv at the end of the method
 
-
-
-I also Included my compressed java project folder Which includes the database it made and the CSV file that it outputs 
+If the data doesn’t get flagged as ‘bad’ my code sends the line of the csv to an insert method as a string array.  The method connects to the database and adds the array to a table of “GOODRESULTS”.  My program counts all the records as well as the bad and good results separately and prints out a log file and the end of processing.
