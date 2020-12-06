@@ -18,15 +18,15 @@ import java.util.logging.Logger;
 
 
 public class Project {
-	public static int records = 0; // how many entries in the CSV File
+	//public static int records = 0; // how many entries in the CSV File
 	public static int brecords = 0; // how many bad entries
 	public static int grecords = 0; // how many good entries
 	public static void main(String[] args) throws SecurityException, IOException {
 		Scanner sc = new Scanner(System.in); 
 		System.out.println("Please enter the File Path of your Interview Challenge CSV Document"); // Collect File Path
 		System.out.println("EXAMPLE: /Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv");
-		String Filepath = sc.nextLine(); // collect whole ine of user input if wrong will not run 
-		System.out.println(Filepath);
+		String Filepath = sc.nextLine(); // collect whole line of user input if wrong will not run 
+		//System.out.println(Filepath);
 		//String Filepath = "/Users/kjpepper275/Downloads/ms3Interview - Jr Challenge 2.csv"; // where the document is saved on my computer 
 		connect(); // connecting to database for the first time on the run
 		create(); // creating a table and drop a previous table
@@ -36,7 +36,7 @@ public class Project {
         Logger logger = Logger.getLogger("Results From CSV");
         logger.addHandler(handler);
         logger.info("INFORMATION!!!"); // header for file
-        logger.info("Number of Records = " + records);
+        logger.info("Number of Records = " + (grecords + brecords));
         logger.info("Number of Bad Records = " + brecords);
         logger.info("Number of Good Records = " + grecords);
 
@@ -111,7 +111,7 @@ public class Project {
 
 	public static void read(String csvfile) { // reading all the data from the csv
 		CSVReader reader = null;
-		//System.out.println("Here");
+
 		try 
 		{
 			FileWriter outputfile = new FileWriter("results-bad.csv"); //my csv file I write too 
@@ -123,16 +123,16 @@ public class Project {
 			//List<String[]> gdata = new ArrayList<String[]>(); // good results
 			while((line = reader.readNext()) != null) 
 			{
-				for(int i = 0; i < 10; i++)  
+				for(int i = 0; i < 10; i++)  //hard coded 10 without it thinks there is 15 elements 
 				{  
 					String token = line[i];
-					if(token.equals("")||token.contains("'")) { //checking if a row is empty also I check for a single quote as My Insert to table algorithm won't work if there is a single quote, This could be fixed but It took me a bit to get that insert to work
-						brecords++;
+					if(token.equals("")||token.contains("'")) { //checking if a row is empty also check for a single quote as my Insert to table algorithm won't work if there is a single quote, This could be fixed but It took me a bit to get that insert to work
 						bad = true;
 					}
 				} 
 				if(bad) 
 				{
+					brecords++;
 					bdata.add(line); // if its a bad result add to a list
 					bad = false;
 				}
@@ -147,14 +147,13 @@ public class Project {
 					add(line); // send the string array to be added to the database
 					}
 				}
-				records++; // number of total records
 			}
 			writer.writeAll(bdata);//write all the bad CSV entries at once 
 			writer.close(); 
 		}
 
 		catch (Exception e) {
-			System.out.println("Error Somewhere in here");
+			System.out.println("Error E");
 		}
 	}
 }
